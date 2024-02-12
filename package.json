@@ -1,20 +1,30 @@
 {
   "name": "bang-frontend",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "next dev --turbo",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/dimak911/bang-frontend.git"
+  "dependencies": {
+    "next": "14.1.0",
+    "react": "^18",
+    "react-dom": "^18",
+    "socket.io-client": "^4.7.4"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/dimak911/bang-frontend/issues"
-  },
-  "homepage": "https://github.com/dimak911/bang-frontend#readme"
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10.0.1",
+    "eslint": "^8",
+    "eslint-config-next": "14.1.0",
+    "eslint-config-prettier": "^9.1.0",
+    "postcss": "^8",
+    "prettier": "3.2.5",
+    "tailwindcss": "^3.3.0",
+    "typescript": "^5"
+  }
 }
