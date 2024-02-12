@@ -1,18 +1,24 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import io from "socket.io-client";
+import io, { Socket } from "socket.io-client";
 
-const socket = io({
-  withCredentials: false,
-});
+let socket: Socket;
 
 export default function Chat() {
   const [messages, setMessages] = useState<string[]>([]);
   const [currentMessage, setCurrentMessage] = useState<string>("");
 
   useEffect(() => {
+    socket = io("http://localhost:3333");
+
+    socket.on("connect", () => {
+      console.log("socket connected");
+    });
+
     socket.on("message", (message) => {
+      console.log("message: ", message);
+
       setMessages((prevMessages) => [...prevMessages, message]);
     });
 
@@ -22,18 +28,18 @@ export default function Chat() {
   }, []);
 
   const sendMessage = () => {
-    socket.emit("message", currentMessage);
+    socket.emit("chat message", currentMessage);
     setCurrentMessage("");
   };
 
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-2 flex-col w-80">
       {messages.map((message, index) => (
         <p key={index}>{message}</p>
       ))}
 
       <input
-        className="shadow appearance-none border rounded w-80 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         placeholder="input"
         type="text"
         value={currentMessage}

@@ -7,8 +7,6 @@ interface RoomPageProps {
 }
 
 export default function RoomPage({ params }: RoomPageProps) {
-  console.log(params);
-
   return (
     <div className="p-6">
       <div>{`Room #${params.id}`}</div>
