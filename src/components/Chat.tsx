@@ -10,7 +10,11 @@ export default function Chat() {
   const [currentMessage, setCurrentMessage] = useState<string>("");
 
   useEffect(() => {
-    socket = io("http://localhost:3333");
+    socket = io(process.env.NEXT_PUBLIC_BASE_API_URL || "", {
+      extraHeaders: {
+        "ngrok-skip-browser-warning": "69420",
+      },
+    });
 
     socket.on("connect", () => {
       console.log("socket connected");
