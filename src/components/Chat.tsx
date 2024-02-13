@@ -10,7 +10,11 @@ export default function Chat() {
   const [currentMessage, setCurrentMessage] = useState<string>("");
 
   useEffect(() => {
-    socket = io("http://localhost:3333");
+    socket = io("https://8789-77-120-226-129.ngrok-free.app", {
+      extraHeaders: {
+        "ngrok-skip-browser-warning": "69420"
+      }
+    });
 
     socket.on("connect", () => {
       console.log("socket connected");
@@ -34,21 +38,21 @@ export default function Chat() {
 
   return (
     <div className="flex gap-2 flex-col w-80">
-      {messages.map((message, index) => (
-        <p key={index}>{message}</p>
-      ))}
+      { messages.map((message, index) => (
+        <p key={ index }>{ message }</p>
+      )) }
 
       <input
         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         placeholder="input"
         type="text"
-        value={currentMessage}
-        onChange={(e) => setCurrentMessage(e.target.value)}
+        value={ currentMessage }
+        onChange={ (e) => setCurrentMessage(e.target.value) }
       />
 
       <button
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        onClick={sendMessage}
+        onClick={ sendMessage }
       >
         Send
       </button>
