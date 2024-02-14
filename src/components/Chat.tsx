@@ -2,34 +2,42 @@
 
 import { useEffect, useState } from "react";
 import io, { Socket } from "socket.io-client";
+import { useSearchParams } from "next/navigation";
+
 
 let socket: Socket;
 
-export default function Chat() {
+export const Chat = () => {
   const [messages, setMessages] = useState<string[]>([]);
   const [currentMessage, setCurrentMessage] = useState<string>("");
 
+  const searchParams = useSearchParams()
+
+
+  const roomId  = searchParams.get('room')
   useEffect(() => {
+    socket = io(process.env.NEXT_PUBLIC_LOCAL_BASE_API_URL || "", {
     // socket = io(process.env.NEXT_PUBLIC_BASE_API_URL || "", {
     //   extraHeaders: {
     //     "ngrok-skip-browser-warning": "69420",
     //   },
-    // });
-    socket = io("https://8789-77-120-226-129.ngrok-free.app", {
-      extraHeaders: {
-        "ngrok-skip-browser-warning": "69420"
-      }
     });
 
     socket.on("connect", () => {
       console.log("socket connected");
     });
 
-    socket.on("message", (message) => {
+    socket.emit('join room', roomId)
+
+    socket.on("message", ({redis, message }) => {
       console.log("message: ", message);
+      console.log("redisTest: ", redis);
 
       setMessages((prevMessages) => [...prevMessages, message]);
     });
+
+
+
 
     return () => {
       socket.disconnect();
@@ -37,7 +45,8 @@ export default function Chat() {
   }, []);
 
   const sendMessage = () => {
-    socket.emit("chat message", currentMessage);
+    console.log(currentMessage);
+    socket.emit("chat message", { roomId: roomId, message: currentMessage });
     setCurrentMessage("");
   };
 
