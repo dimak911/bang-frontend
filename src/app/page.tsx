@@ -1,13 +1,14 @@
 "use client";
 
-import socket from "@src/socket/socket";
-import { SocketEventsEnum } from "@src/common/enums/socket/socket-events.enum";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import socket from "@src/socket/socket";
+import { SocketEventsEnum } from "@src/common/enums/socket/socket-events.enum";
+
 interface FormData {
-  userName: string;
+  username: string;
   roomId: string;
 }
 
@@ -23,17 +24,23 @@ export default function Home() {
 
   const initialSocketConnect = (data: FormData) => {
     setUserNameAlreadySelected(true);
-    const username = data.userName;
-    socket.auth = { username };
+    const { username, roomId } = data;
+
+    socket.auth = { username, roomId };
+
     socket.connect();
+
     socket.on(SocketEventsEnum.CONNECTION, () =>
       console.log("socket connected"),
     );
 
-    socket.on(SocketEventsEnum.USER_FIRST_CONNECTED, ({ userId, username }) => {
-      if (userId) {
+    socket.on(SocketEventsEnum.USER_FIRST_CONNECTED, ({ username, roomId }) => {
+      if (username && roomId) {
+        localStorage.setItem("username", username);
+        localStorage.setItem("roomId", roomId);
+
         reset();
-        router.push(`/room/${userId}`);
+        router.push(`/room/${roomId}`);
       }
     });
 
@@ -61,16 +68,16 @@ export default function Home() {
               Username
             </label>
             <input
-              {...register("userName", { required: "User name is required" })}
+              {...register("username", { required: "User name is required" })}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-blue-300"
               id="userName"
               type="text"
               placeholder="Username"
               autoComplete="off"
             />
-            {errors.userName && (
+            {errors.username && (
               <p className="text-red-500 text-xs mt-1">
-                {errors.userName.message}
+                {errors.username.message}
               </p>
             )}
           </div>
